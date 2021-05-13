@@ -210,12 +210,16 @@ namespace System.IO
         }
 
         #region Task based Async APIs
-        public override Task<string?> ReadLineAsync()
+        public override Task<string?> ReadLineAsync() => ReadLineAsync(CancellationToken.None);
+        
+        public override Task<string?> ReadLineAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(ReadLine());
         }
 
-        public override Task<string> ReadToEndAsync()
+        public override Task<string> ReadToEndAsync() => ReadToEndAsync(CancellationToken.None);
+
+        public override Task<string> ReadToEndAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(ReadToEnd());
         }

@@ -203,18 +203,22 @@ namespace System.IO
         }
 
         #region Task based Async APIs
-        public virtual Task<string?> ReadLineAsync() =>
+        public virtual Task<string?> ReadLineAsync() => ReadLineAsync(CancellationToken.None);
+
+        public virtual async Task<string?> ReadLineAsync(CancellationToken cancellationToken) =>
             Task<string?>.Factory.StartNew(static state => ((TextReader)state!).ReadLine(), this,
                 CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Default);
 
-        public virtual async Task<string> ReadToEndAsync()
+        public virtual async Task<string> ReadToEndAsync() => ReadToEndAsync(CancellationToken.None);
+
+        public virtual async Task<string> ReadToEndAsync(CancellationToken cancellationToken)
         {
             var sb = new StringBuilder(4096);
             char[] chars = ArrayPool<char>.Shared.Rent(4096);
             try
             {
                 int len;
-                while ((len = await ReadAsyncInternal(chars, default).ConfigureAwait(false)) != 0)
+                while ((len = await ReadAsyncInternal(chars, cancellationToken).ConfigureAwait(false)) != 0)
                 {
                     sb.Append(chars, 0, len);
                 }
